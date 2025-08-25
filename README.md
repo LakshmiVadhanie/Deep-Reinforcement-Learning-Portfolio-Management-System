@@ -1,6 +1,6 @@
 # Deep Reinforcement Learning Portfolio Management System
 
-**DRL, PyTorch, Gym, Financial APIs | June 2025**
+**DRL, PyTorch, Gym, Financial APIs**
 
 ## Overview
 
