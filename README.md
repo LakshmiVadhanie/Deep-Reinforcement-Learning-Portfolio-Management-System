@@ -70,7 +70,6 @@ The system will:
 
 ## Visualizations
 
-The system generates comprehensive performance dashboards including:
 - Portfolio performance comparison
 - Risk-return analysis
 - Training progress tracking
