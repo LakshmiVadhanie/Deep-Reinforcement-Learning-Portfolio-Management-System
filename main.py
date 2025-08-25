@@ -4,13 +4,14 @@ import numpy as np
 import pandas as pd
 import warnings
 warnings.filterwarnings('ignore')
+
 from data_loader import DataLoader
 from environment import PortfolioEnvironment
 from dqn_agent import DQNAgent
 from ppo_agent import PPOAgent
 from trainer import train_agent
 from evaluator import evaluate_agent
-from visualization import create_executive_dashboard, create_training_analysis, create_allocation_analysis, create_risk_analysis
+from visualization import create_executive_dashboard, create_training_analysis, create_allocation_analysis
 np.random.seed(42)
 import torch
 torch.manual_seed(42)
@@ -248,48 +249,6 @@ def main():
         ppo_portfolio_risk = np.std(ppo_avg) * 100
         print(f"DQN Allocation Risk (Std): {dqn_portfolio_risk:.1f}%")
         print(f"PPO Allocation Risk (Std): {ppo_portfolio_risk:.1f}%")
-
-    # Create risk analysis
-    create_risk_analysis(dqn_results, ppo_results)
-
-    print("\n" + "="*80)
-    print("COMPREHENSIVE RISK ANALYSIS SUMMARY")
-    print("="*80)
-
-    from visualization import calculate_var, calculate_expected_shortfall
-    
-    dqn_returns = np.array(dqn_results['returns']) * 100
-    ppo_returns = np.array(ppo_results['returns']) * 100
-
-    risk_analysis_df = pd.DataFrame({
-        'Risk Metric': [
-            'Daily Volatility', 'Annualized Volatility', 'Value at Risk (95%)',
-            'Expected Shortfall', 'Maximum Daily Loss', 'Sharpe Ratio',
-            'Sortino Ratio', 'Calmar Ratio'
-        ],
-        'DQN Strategy': [
-            f"{np.std(dqn_returns):.2f}%",
-            f"{np.std(dqn_returns) * np.sqrt(252):.2f}%",
-            f"{calculate_var(dqn_returns):.2f}%",
-            f"{calculate_expected_shortfall(dqn_returns):.2f}%",
-            f"{np.min(dqn_returns):.2f}%",
-            f"{dqn_results['sharpe_ratio']:.3f}",
-            f"{np.mean(dqn_returns[dqn_returns > 0]) / np.std(dqn_returns[dqn_returns < 0]) if len(dqn_returns[dqn_returns < 0]) > 0 else 0:.3f}",
-            f"{dqn_results['annual_return'] / dqn_results['max_drawdown'] if dqn_results['max_drawdown'] > 0 else 0:.3f}"
-        ],
-        'PPO Strategy': [
-            f"{np.std(ppo_returns):.2f}%",
-            f"{np.std(ppo_returns) * np.sqrt(252):.2f}%",
-            f"{calculate_var(ppo_returns):.2f}%",
-            f"{calculate_expected_shortfall(ppo_returns):.2f}%",
-            f"{np.min(ppo_returns):.2f}%",
-            f"{ppo_results['sharpe_ratio']:.3f}",
-            f"{np.mean(ppo_returns[ppo_returns > 0]) / np.std(ppo_returns[ppo_returns < 0]) if len(ppo_returns[ppo_returns < 0]) > 0 else 0:.3f}",
-            f"{ppo_results['annual_return'] / ppo_results['max_drawdown'] if ppo_results['max_drawdown'] > 0 else 0:.3f}"
-        ]
-    })
-
-    print(risk_analysis_df.to_string(index=False, col_space=18))
 
 if __name__ == "__main__":
     main()
