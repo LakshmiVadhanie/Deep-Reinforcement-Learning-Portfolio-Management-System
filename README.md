@@ -32,8 +32,6 @@ A sophisticated portfolio management system using Deep Reinforcement Learning al
 
 
 ```
-
-
 The system will:
 1. Fetch FAANG stock data (2020-2023)
 2. Engineer technical features
